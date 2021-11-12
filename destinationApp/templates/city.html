@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}热门城市{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="model-details-title">
+            热门城市<span><a style="font-size: 12px;float: right" href="{% url 'destinationApp:citymap' %}">查看地图</a></span>
+        </div>
+        <div class="row">
+            {% for city in cityList %}
+                <div class="col-sm-6 col-md-4" style="float: left">
+                    <div class="thumbnail">
+                        <a href="{% url 'destinationApp:cityDetail' city.id %}">
+                            <img src="{{city.photo.url}}" style="height: 240px">
+                        </a>
+                        <div class="carousel-caption nav-title">
+                            <h2 style="font-size: 27px"><a href="{% url 'destinationApp:cityDetail' city.id %}" style="color: white;height: 50px;width: 50px">{{city.name}}</a></h2>
+                            <p class="enname" style="font-size: 15px">{{city.enname}}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if pageDate %}
+            <div class="paging" style="margin-left: 42%">
+                <ul id="pages" class="pagination pagination-sm pagination-xs">
+                    {% if pageDate.first %}
+                        <li><a href="?page=1"></a></li>
+                    {% endif %}
+                    {% if pageDate.left %}
+                        {% if pageDate.left_has_more %}
+                            <li><span>...</span></li>
+                        {% endif %}
+                        {% for i in pageDate.left %}
+                            <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endfor %}
+                    {% endif %}
+                    <li class="active"><a href="?page={{ pageDate.page }}">{{ pageDate.page }}</a></li>
+                    {% if pageDate.right %}
+                        {% for i in pageDate.right %}
+                            <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endfor %}
+                        {% if pageDate.right_has_more %}
+                            <li><span>...</span></li>
+                        {% endif %}
+                    {% endif %}
+                    {% if pageDate.last %}
+                        <li><a href="?page={{ pageDate.total_pages }}">{{ pageDate.total_pages }}</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

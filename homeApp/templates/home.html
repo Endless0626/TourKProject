@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    <script src="{% static 'js/jqthumb.min.js' %}"></script>
+    <div class="col-md-12" style="position: absolute;">
+        <div style="padding: 20px 0;margin-top: 140px;width: 50%;">
+            <div class="hidden-xs model-details-title-search" align="center" style="background-color: white">
+                <form method="get" id="searchform" action="{% url 'ticketApp:search' %}">
+                    {% csrf_token %}
+                    <div class="input-group col-md-12" style="width: 55%;padding: 20px">
+                        <div class="col-md-12">
+                            <input type="text" name="offkey" class="form-control" style="margin-bottom: 10px"
+                                   placeholder="出发城市：例如 深圳/青岛/北京" required />
+                            <input type="text" name="landkey" class="form-control" style="margin-top: 10px"
+                                   placeholder="到达城市：例如 首尔/釜山/济州岛" required />
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <div class="input-group-btn">
+                                <input type="submit" class="btn btn-default"
+                                       style="width: 100%;margin-top: 15px" value="机票查询🔎" />
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="ad" class="carousel slide" data-ride="carousel" data-interval="3000" style="margin-bottom: 15px">
+        <div class="carousel-inner">
+            {% for img in imgList %}
+                {% if forloop.first %}
+                    <div class="item active">
+                        <img src="{{ img.photo.url }}" style="width: 100%;height: 470px">
+                    </div>
+                {% else %}
+                    <div class="item">
+                        <img src="{{ img.photo.url }}" style="width: 100%;height: 470px">
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <a class="left carousel-control" href="#ad" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="right carousel-control" href="#ad" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-1"></div>
+        <div class="col-md-1">
+            <p style="font-size: 16px;color: orangered;font-family: 方正综艺简体;font-style: italic">旅游快讯</p>
+        </div>
+        <div class="col-md-9">
+            <marquee direction="left" align="bottom" height="30"
+                     width="100%" onmouseout="this.start()"
+                     onmouseover="this.stop()" scrollamount="2"
+                     scrolldelay="1" style="font-size: 15px;">
+                外交部领保中心祝您平安：近期本地区假冒中国使领馆的电信诈骗高发，特此提醒：使领馆
+                不会电话通知您护照过期或有文件需要领取，也不会通知您有涉及国内的案件需要处理，
+                更不会将电话转接所谓办案单位或索要您的银行、微信账号等信息。不参与赌博活动。
+                尊重当地风俗。<i style="color: red">韩国报警电话112，救援119。旅游咨询1330。翻译服务120。</i>
+                外交部全球领事保护与服务应急呼叫中心电话+86-10-12308/59913991。驻韩使馆0082-27550572，驻釜山总领馆0082-1085198748，驻光州总领馆0082-62-3618880，驻济州总领馆0082-64-722-8802。
+            </marquee>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <div class="container">
+        <div class="row row-3">
+            <div class="col-md-4">
+                <span class="part1">
+                    <a href="{% url 'destinationApp:city' %}">城市概况</a>
+                </span>
+                <span class="part1 en">
+                    &nbsp;&nbsp;/ About City
+                </span>
+                <div class="line1">
+                    <div class="line2 theme"></div>
+                </div>
+                <div id="myCarouse" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators nav-point">
+                        {% for ci in cityList %}
+                            <li data-target="#myCarousel"
+                                data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %}>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                    <div class="carousel-inner">
+                        {% for ci in cityList %}
+                            <div {% if forloop.first %} class="item active" {% else %} class="item"
+                            {% endif %} style="background-size: cover">
+                                <a href="{% url 'destinationApp:cityDetail' ci.id %}">
+                                    <img src="{{ ci.photo.url }}" class="img-responsive" onload="DrawImage(this)">
+                                </a>
+                                <div class="carousel-caption nav-title">
+                                    {{ ci.description|truncatechars:"42" }}...
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <span class="part1">
+                    <a href="{% url 'communityApp:quiz' %}">问答Q&A</a>
+                </span>
+                <span class="part1 en">
+                    &nbsp;&nbsp;/ Quiz
+                </span>
+                <a class="btn btn-default btn-xs more-btn" href="{% url 'communityApp:quiz' %}">
+                    + &nbsp;更多
+                </a>
+                <div class="line1">
+                    <div class="line2 theme"></div>
+                </div>
+                <div class="col-md-12">
+                    {% for qu in quizList %}
+                        <div class="col-md-6">
+                            <a href="{% url 'communityApp:reply' qu.id %}">
+                                <h4 style="color: #F4A460">Q:</h4>
+                                {{ qu.title|truncatechars:20 }}>>
+                            </a>
+                        </div>
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-3 col-pro" style="margin-top: 5px">
+            <div class="col-md-12">
+                <span class="part1">
+                    <a href="{% url 'noteApp:routes' %}">行程线路</a>
+                </span>
+                <span class="part1 en">
+                    &nbsp;&nbsp;/ Routes
+                </span>
+                <div class="line1">
+                    <div class="line2 theme"></div>
+                </div>
+            </div>
+            <div class="col-md-12" style="margin-top: 10px">
+                {% for no in noteList %}
+                    <div class="col-md-4" align="center">
+                        <a href="{% url 'noteApp:noteDetail' no.id %}" style="color: black;font-size: 16px">
+                            <img src="{{ no.pagephoto.url }}" style="width: 90%;height: 200px">
+                            <h4>
+                                {{ no.title|truncatechars:18 }}
+                            </h4>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div align="center">
+                <a class="btn btn-default btn-xs more-btn" href="{% url 'noteApp:routes' %}"
+                   style="font-size: 15px;color: #F4A460;width: 150px;float: none;
+                   border-color: #F4A460;margin-top: 15px;margin-bottom: 15px">
+                    查看全部
+                </a>
+            </div>
+        </div>
+        <div class="row row-3" style="margin-top: 15px">
+            <div class="col-md-12">
+                <span class="part1">
+                    <a href="{% url 'hotelApp:hotels' %}">酒店推荐</a>
+                </span>
+                <span class="part1 en">
+                    &nbsp;&nbsp;/ Hotels
+                </span>
+                <div class="line1">
+                    <div class="line2 theme"></div>
+                </div>
+            </div>
+            <div class="col-md-12" style="margin-top: 10px">
+                {% for ho in hotelList %}
+                    <div class="col-md-4" align="center">
+                        <h3 style="position: absolute;color: white;padding-left: 100px;margin-top: 170px">
+                            <i style="font-size: 14px;font-style: normal;">{{ ho.city }}·</i>{{ ho.title }}
+                        </h3>
+                        <a href="{% url 'hotelApp:hotelDetail' ho.id '全部' %}" style="color: black;font-size: 16px">
+                            {% for img in ho.hotelImgs.all %}
+                                {% if forloop.first %}
+                                    <img src="{{ img.photo.url }}" style="width: 100%;height: 220px">
+                                {% endif %}
+                            {% endfor %}
+                        </a>
+                        <p style="margin-top: 5px;color: #777777">
+                            附近景点：{{ ho.near1 }}&nbsp;|&nbsp;{{ ho.near2 }}&nbsp;|&nbsp;{{ ho.near3 }}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div align="center">
+                <a class="btn btn-default btn-xs more-btn" href="{% url 'hotelApp:hotels' %}"
+                   style="font-size: 15px;color: #F4A460;width: 150px;float: none;
+                   border-color: #F4A460;margin-top: 15px;margin-bottom: 15px">
+                    查看全部
+                </a>
+            </div>
+        </div>
+        <div class="row row-3" style="margin-top: 10px">
+            <div class="col-md-9 col-pro">
+                <span class="part1">
+                    <a href="{% url 'communityApp:strategy' %}">攻略下载</a>
+                </span>
+                <span class="part1 en">
+                    &nbsp;&nbsp;/ Strategy
+                </span>
+                <a class="btn btn-default btn-xs more-btn" href="{% url 'communityApp:strategy' %}">
+                    + &nbsp;更多
+                </a>
+                <div class="line1">
+                    <div class="line2 theme"></div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 15px">
+                    {% for st in strategyList %}
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <a href="{% url 'communityApp:getDoc' st.id %}">
+                                    <img src="{{ st.photo.url }}">
+                                </a>
+                                <div class="caption">
+                                    <p style="margin-bottom: 0">
+                                        <a href="{% url 'communityApp:getDoc' st.id %}"><b>{{ st.title }}</b></a>
+                                        <ol class="dropdown" style="float: right">
+                                            <a class="dropdown-toggle">⏷</a>
+                                            <i class="dropdown-menu" style="font-size: 10px;padding: 5px;font-style: normal">{{ st.description }}</i>
+                                        </ol>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 15px">
+                <span class="part1">
+                    <a href="{% url 'communityApp:visa' %}">签证</a>
+                </span>
+                <span class="part1 en">
+                    &nbsp;&nbsp;/ Visa
+                </span>
+                <div class="line1">
+                    <div class="line2 theme"></div>
+                </div>
+                <div class="col-md-12">
+                    {% for vi in visa %}
+                        <div style="margin-top: 10px">
+                            <a href="{% url 'communityApp:visaData' vi.id %}">
+                                <img src="{{vi.slogan.url}}" style="width: 100%">
+                            </a>
+                            <div class="caption">
+                                <p style="margin-bottom: 0;margin-top: 5px">
+                                    {{vi.title}}
+                                    <h3 style="color: #F4A460;margin: 0;padding-top: 0;float: right">¥{{ vi.price }}<i style="font-size: 13px;font-style: normal;color: black">起</i></h3>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <a class="btn btn-default btn-xs more-btn" href="{% url 'communityApp:visa' %}">
+                    查看更多签证商品>>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

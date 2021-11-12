@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block title %}
+问答
+{% endblock %}
+{% block content %}
+    <link href="{% static 'css/products.css' %}" rel="stylesheet">
+<!--广告横幅-->
+    <div class="container-fluid">
+        <div class="row">
+            <img class="img-responsive model-img" style="width: 100%;height: 470px" src="{% static 'img/ticket/4.jpeg' %}">
+        </div>
+    </div>
+    <!--主体内容-->
+    <div class="container">
+        <div class="row row-3" style="margin-top: 5px">
+            <!--侧边导航栏-->
+            <div class="col-md-3">
+                <div class="model-title">
+                    社区
+                </div>
+                <div class="model-list">
+                    <ul class="list-group">
+                        <li class="list-group-item" id="strategys">
+                            <a href="{% url 'communityApp:strategy' %}">攻略下载</a>
+                        </li>
+                        <li class="list-group-item" id="quizs">
+                            <a href="{% url 'communityApp:quiz' %}">问答</a>
+                        </li>
+                        <li class="list-group-item" id="visas">
+                            <a href="{% url 'communityApp:visa' %}">签证</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--说明文字与图片-->
+            <div class="col-md-9">
+                <div class="model-details-title">
+                    问答Q&A
+                    <div class="col-md-7 hidden-xs model-details-title-search" style="float: right;width: 300px">
+                        <form method="get" id="searchform" action="{% url 'communityApp:search' %}">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" name="keyword" class="form-control" placeholder="请输入关键词" required />
+                                <span class="input-group-btn">
+                                    <input type="submit" class="btn btn-default" value="查询" />
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    <a style="font-size: 13px" href="#ask">我要提问</a>
+                </div>
+                  <!--此处填入产品列表内容-->
+                <div class="model-details">
+                    {% for qz in quizList %}
+                        <div class="col-md-12">
+                            <h4>
+                                <img src="{% static 'img/community/newsicon.gif' %}" style="width: 35px">
+                                <a href="{% url 'communityApp:reply' qz.id %}"
+                                   style="color: black">{{ qz.title }}</a>
+                            </h4>
+                            <p style="color:#777777;">
+                                {{ qz.content|truncatechars:"150" }}
+                            </p>
+                            <p style="font-size: 10px;color: grey;float: right">
+                                <i style="font-size: 12px;color: #F4A460;font-style: normal;font-weight: bolder">
+                                    {{ qz.name }}</i>
+                                &nbsp;&nbsp;&nbsp;发布于{{ qz.quizDate }}
+                            </p>
+                        </div>
+                    {% endfor %}
+                    {% if pageDate %}
+                    <div class="paging">
+                        <ul id="pages" class="pagination">
+                            {% if pageDate.first %}
+                                <li><a href="?page=1"></a></li>
+                            {% endif %}
+                            {% if pageDate.left %}
+                                {% if pageDate.left_has_more %}
+                                    <li><span>...</span></li>
+                                {% endif %}
+                                {% for i in pageDate.left %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                            <li class="active"><a href="?page={{ pageDate.page }}">{{ pageDate.page }}</a></li>
+                            {% if pageDate.right %}
+                                {% for i in pageDate.right %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endfor %}
+                                {% if pageDate.right_has_more %}
+                                    <li><span>...</span></li>
+                                {% endif %}
+                            {% endif %}
+                            {% if pageDate.last %}
+                                <li><a href="?page={{ pageDate.total_pages }}">{{ pageDate.total_pages }}</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="model-details-title">
+            <a name="ask" style="color: #F4A460">我要提问</a>
+        </div>
+        <div class="col-md-12">
+            <div class="panel-body">
+                <div class="row">
+                    <form action="." name="quizForm" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+                        {% csrf_token %}  <!--规避跨站请求，不加，后台无法接受数据-->
+                        <!-- 左侧 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">昵称：</label>
+                                <div class="col-sm-10">
+                                    {{quizForm.name|add_class:"form-control"|attr:"placeholder=请填写昵称"}}<!--模板表单变量-->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">提问：</label>
+                                <div class="col-sm-10">
+                                    {{quizForm.title|add_class:"form-control"}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">具体内容：</label>
+                                <div class="col-md-10">
+                                    {{quizForm.content|add_class:"form-control"}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <center><input type="submit" class="btn btn-primary" value="提交" /></center>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

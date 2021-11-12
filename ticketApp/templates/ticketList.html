@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}机票{% endblock %}
+
+{% block content %}
+    <div class="col-md-12" align="center" style="position: absolute">
+        <div style="padding: 20px 0;margin-top: 250px;background-color: #EEE9E9;width: 50%;">
+            <div style="padding: 0">
+                <b style="color: #777777;font-size: larger">请输入关键词进行搜索</b>
+            </div>
+            <div class="hidden-xs model-details-title-search" align="center">
+                <form method="get" id="searchform" action="{% url 'ticketApp:search' %}">
+                    {% csrf_token %}
+                    <div class="input-group col-md-12" style="width: 80%;padding: 40px">
+                        <div class="col-md-9">
+                            <input type="text" name="offkey" class="form-control" style="margin-bottom: 5px"
+                                   placeholder="出发城市：例如 深圳/青岛/北京" required />
+                            <input type="text" name="landkey" class="form-control" style="margin-top: 5px"
+                                   placeholder="到达城市：例如 首尔/釜山/济州岛" required />
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group-btn">
+                                <input type="submit" class="btn btn-default"
+                                       style="width: 100%;height: 75px" value="🔍查询" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <img src="{% static 'img/ticket/7.jpeg' %}" style="width: 100%">
+    <div class="container"style="margin-top: 10px;">
+        <div class="col-md-12">
+            <div class="model-details-title">
+                最近机票<a style="font-size: 12px;float: right" href="{% url 'ticketApp:ticketOff' '全部' '全部' '全部' %}">更多>></a>
+            </div>
+            <div class="row">
+                {% for ticket in tickets %}
+                    <div class="col-md-3">
+                        <div class="thumbnail" style="height: 62px">
+                            <p>{{ ticket.off }}&nbsp;&nbsp;
+                                <i class="icon icon-single" style="color: gray">⇀</i>
+                                &nbsp;&nbsp;{{ ticket.land }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i style="color: #9d9d9d">{{ ticket.offTime|date:"m-d" }}</i></p>
+                            <p style="float: right;font-size: 20px;color: #F4A460">¥{{ ticket.price }}<i style="color: #3c3c3c;font-size: 12px;font-style: normal">起</i></p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

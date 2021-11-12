@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    详情
+{% endblock %}
+
+{% block content %}
+    <link href="{% static 'css/products.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+        .hide{display: none}
+        .changeColor{font-size: 15px;color: white;border: none;background-color: #F4A460;width: 150px;height: 35px;margin-top: 10px}
+    </style>
+    <div class="container">
+        <div class="col-md-12">
+        <br>
+            <div class="col-md-5">
+                <img src="{{ visadetail.slogan.url }}" style="width: 100%;">
+            </div>
+            <div class="col-md-7">
+                <h3>{{ visadetail.title }}</h3>
+                <h2 style="color: orangered;font-weight: bolder;
+                background-color: #fffff0;padding: 15px 20px">
+                    ¥{{ visadetail.price }}
+                </h2>
+                <p style="font-size: 12px;color: #777777;padding-top: 15px">优惠信息&nbsp;&nbsp;&nbsp;{{ visadetail.discount }}</p>
+                <p style="font-size: 12px;color: #777777;padding-top: 15px">预订须知&nbsp;&nbsp;&nbsp;{{ visadetail.orderknow }}</p>
+            </div>
+            <div class="col-md-12" style="margin-top: 20px;font-size: 12px;padding-top: 10px">
+                <p>签证类型：{{ visadetail.type }}</p>
+                <p>有效期：{{ visadetail.expire }}</p>
+                <p>停留天数：{{ visadetail.staydays }}</p>
+                <p>入境次数：{{ visadetail.number }}</p>
+                <p>订单有效期：{{ visadetail.order }}</p>
+                <p>受理地区：{{ visadetail.place }}</p>
+            </div>
+            <div class="col-md-12" style="padding-top: 20px;padding-bottom: 0">
+                <ul class="nav navbar-nav" style="width: 90%;height: 40px;margin-top: 0">
+                    <li class="nav-top" id="产品介绍">
+                        <a href="#about" style="font-size: 15px;color: #F4A460">产品介绍</a>
+                    </li>
+                    <li class="nav-top" id="所需材料">
+                        <a href="#data" style="font-size: 15px;color: #F4A460">所需材料</a>
+                    </li>
+                    <li class="nav-top" id="办签流程">
+                        <a href="#flow" style="font-size: 15px;color: #F4A460">办签流程</a>
+                    </li>
+                    <li class="nav-top" id="购买须知">
+                        <a href="#know" style="font-size: 15px;color: #F4A460">购买须知</a>
+                    </li>
+                </ul>
+                <hr width="100%" size="5px">
+            </div>
+            <div class=" col-md-12">
+                <div class="model-details">
+                    <h3>
+                        <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                        <a name="about" style="color: #3c3c3c">
+                            产品介绍
+                        </a>
+                    </h3>
+                    {% for img in visadetail.abouts.all %}
+                        <div class="row-4">
+                            <img class="img-responsive" src="{{ img.about.url }}" style="width: 55%">
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="model-details">
+                    <h3>
+                        <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                        <a name="data" style="color: #3c3c3c">
+                            所需材料
+                        </a>
+                    </h3>
+                    <div class="col-md-12" style="padding-top: 0;padding-bottom: 0">
+                        <ul class="nav navbar-nav" style="width: 90%;height: 40px;margin-top: 0">
+                            {% for pe in peopleList %}
+                                <input type="button" class="nav-top active" aa="{{ pe.people }}"
+                                       onclick="f1(this)" value="{{ pe.people }}" style="background-color: #F4A460;color: white;border-color: #a6a6a6;height: 35px;margin-right: 5px">
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <hr width="100%" size="5px" style="margin-top: 30px">
+                    <div class="col-md-12">
+                        {% for pe,de in List.items %}
+                            <table border="1" style="width: 100%;height: auto;margin-bottom: 15px;" id="{{ pe }}" name="data" class="hide">
+                                {% for da in de %}
+                                    <tr>
+                                        <td>
+                                            <div style="width: 150px;height: auto;padding: 15px 15px">
+                                                <p style="font-size: 15px;color: #777777;" align="center">{{ da.data }}</p>
+                                                <i style="color: red;background-color: #f2dede;padding: 2px;
+                                                   font-style: normal;font-size: 5px;float: left">{{ da.type }}</i>
+                                                <br>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="width: 80px">
+                                                <p align="center" style="padding: 5px">&times;{{ da.amount }}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p style="padding: 10px">
+                                                {{ da.description }}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="model-details">
+                    <h3 style="margin-top: 30px">
+                        <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                        <a name="flow" style="color: #3c3c3c">
+                            办签流程
+                        </a>
+                    </h3>
+                    <div class="row-4" align="center">
+                        <img src="{{ visadetail.flow.url }}" align="center">
+                    </div>
+                </div>
+                <div class="model-details">
+                    <h3 style="margin-top: 30px">
+                        <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                        <a name="know" style="color: #3c3c3c">
+                            购买须知
+                        </a>
+                    </h3>
+                    <div class="row-4">
+                        <h4 style="margin-left: 20px">取消政策</h4>
+                        <p style="color: gray;margin: 20px 0">{{ visadetail.description }}</p>
+                        <h4 style="margin-left: 20px">温馨提示</h4>
+                        <p style="color: gray;margin: 20px">{{ visadetail.tip }}</p>
+                        <h4 style="margin-left: 20px">重要提示</h4>
+                        <p style="color: gray;margin: 20px">{{ visadetail.tips }}</p>
+                        <h4 style="margin-left: 20px">产品服务信息</h4>
+                        <p style="color: gray;margin: 20px">{{ visadetail.message }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function f1(self) {
+            $(self).addClass('changeColor').siblings().removeClass('changeColor');
+            //获取属性值
+            var getele = $(self).attr("aa");
+            //改变内容
+            $("#"+getele).removeClass("hide").siblings().addClass("hide");{#display:none#}
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block title %}
+欢迎留言
+{% endblock %}
+
+{% block content %}
+    <link href="{% static 'css/contact.css' %}" rel="stylesheet">
+{#    <div class="container-fluid">#}
+{#        <div class="row">#}
+{#            <img class="img-responsive model-img" src="{% static 'img/contact.jpg' %}">#}
+{#        </div>#}
+{#    </div>#}
+    <!-- 主体内容 -->
+    <div class="container">
+        <div class="row row-3">
+            <!-- 侧边导航栏 -->
+            <div class="col-md-3">
+                <div class="model-title">
+                    留言板
+                </div>
+                <div class="model-list">
+                    <ul class="list-group">
+                        <li class="list-group-item" id="contact">
+                            <a href="{% url 'messageApp:message' %}">欢迎留言</a>
+                        </li>
+                        <li class="list-group-item" id="recruit">
+                            <a href="{% url 'messageApp:showreply' %}">留言回复</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 留言板面 -->
+            <div class="col-md-9">
+                <div class="model-details-title">
+                    留言回复
+                </div>
+                <div class="model-details">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        请查看留言回复
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <table border="1" style="width: 90%; margin-left: 5%; height: auto">
+                                <tr style="font-weight: bolder">
+                                    <td>姓名</td>
+                                    <td>标题</td>
+                                    <td>内容</td>
+                                    <td>回复</td>
+                                    <td>回复时间</td>
+                                </tr>
+                                {% for rep in replyList %}
+                                    <tr>
+                                        <td> {{rep.name|slice:"1"}}**</td>
+                                        <td> {{rep.title}}  </td>
+                                        <td> {{rep.content}} </td>
+                                        <td> {{rep.replycontent}}</td>
+                                        <td> {{rep.replyDate}} </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

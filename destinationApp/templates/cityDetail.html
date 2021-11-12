@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+{{ product.name }}
+{% endblock %}
+{% block content %}
+    <link href="{% static 'css/products.css' %}" rel="stylesheet">
+<!--广告横幅-->
+    <div class="container-fluid">
+        <div class="row">
+            <img class="img-responsive model-img" style="width: 100%;" src="{% static 'img/destination/special/spots1.jpg' %}">
+        </div>
+    </div>
+    <!--主体内容-->
+    <div class="container">
+        <div class="row row-3">
+            <!--侧边导航栏-->
+            <div class="col-md-3">
+                <div class="model-title">
+                    <a href="{% url 'destinationApp:city' %}" style="color: white">目的地</a>
+                </div>
+                <div class="model-list">
+                    <ul class="list-group">
+                        <li class="list-group-item" id="about">
+                            <a href="{% url 'destinationApp:cityDetail' product.id %}">{{ product.name }}·概况</a>
+                        </li>
+                        <li class="list-group-item" id="spots">
+                            <a href="{% url 'destinationApp:citySpecial' product.id 'spots' %}">{{ product.name }}·景点</a>
+                        </li>
+                        <li class="list-group-item" id="entertain">
+                            <a href="{% url 'destinationApp:citySpecial' product.id 'entertain' %}">{{ product.name }}·娱乐</a>
+                        </li>
+                        <li class="list-group-item" id="food">
+                            <a href="{% url 'destinationApp:citySpecial' product.id 'food' %}">{{ product.name }}·美食</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--说明文字与图片-->
+            <div class="col-md-9">
+                <div class="model-details-title">
+                    <h2>{{ product.name }}&nbsp;&nbsp;</h2>
+                    <p style="font-size: 15px;color: #f0ad4e">{{ product.enname }}</p>
+                    <p style="font-size: 15px;color: #777777">
+                        {{ product.description }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

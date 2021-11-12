@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}攻略下载{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-3">
+                <div class="model-title">
+                    社区
+                </div>
+                <div class="model-list">
+                    <ul class="list-group">
+                        <li class="list-group-item" id="strategys">
+                            <a href="{% url 'communityApp:strategy' %}">攻略下载</a>
+                        </li>
+                        <li class="list-group-item" id="quizs">
+                            <a href="{% url 'communityApp:quiz' %}">问答</a>
+                        </li>
+                        <li class="list-group-item" id="visas">
+                            <a href="{% url 'communityApp:visa' %}">签证</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        <div class="model-details-title col-md-9">
+            攻略
+        </div>
+        <div class="row col-md-9">
+            {% for st in strategyList %}
+                <div class="col-md-4" style="margin-bottom: 5px;height: 385px">
+                    <div class="thumbnail">
+                        <a href="{% url 'communityApp:getDoc' st.id %}">
+                            <img src="{{ st.photo.url }}" style="width: 100%">
+                        </a>
+                        <div class="caption">
+                            <p style="margin-bottom: 0">
+                                <a href="{% url 'communityApp:getDoc' st.id %}"><b>{{ st.title }}</b></a>
+                                <ol class="dropdown" style="float: right">
+                                    <a class="dropdown-toggle">⏷</a>
+                                    <i class="dropdown-menu" style="font-size: 10px;padding: 5px;font-style: normal">{{ st.description }}</i>
+                                </ol>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-3"></div>
+            <div class="col-md-9">
+                {% if pageDate %}
+                    <div class="paging" align="center">
+                        <ul id="pages" class="pagination">
+                            {% if pageDate.first %}
+                                <li><a href="?page=1"></a></li>
+                            {% endif %}
+                            {% if pageDate.left %}
+                                {% if pageDate.left_has_more %}
+                                    <li><span>...</span></li>
+                                {% endif %}
+                                {% for i in pageDate.left %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                            <li class="active"><a href="?page={{ pageDate.page }}">{{ pageDate.page }}</a></li>
+                            {% if pageDate.right %}
+                                {% for i in pageDate.right %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endfor %}
+                                {% if pageDate.right_has_more %}
+                                    <li><span>...</span></li>
+                                {% endif %}
+                            {% endif %}
+                            {% if pageDate.last %}
+                                <li><a href="?page={{ pageDate.total_pages }}">{{ pageDate.total_pages }}</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

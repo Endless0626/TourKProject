@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load highlight %}
+
+{% block title %}
+游记搜索
+{% endblock %}
+
+{% block content %}
+    <link href="{% static 'css/news.css' %}" rel="stylesheet">
+    <div class="container">
+        <div class="row row-3">
+            <!--说明文字与图片-->
+            <div class="model-details-title">
+                关于"{{query}}"的搜索结果
+                    <div class="col-md-7 hidden-xs model-details-title-search" style="width: 300px">
+                        <form method="get" id="searchform" action="{% url 'haystack_search' %}">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control" placeholder="请输入关键词" required />
+                                <span class="input-group-btn">
+                                    <input type="submit" class="btn btn-default" value="查询" />
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+            </div>
+            <div class="model-details">
+                <div class="col-md-12">
+                    <h3>
+                        <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                        &nbsp;行程路线
+                    </h3>
+                </div>
+                {% for result in page.object_list %}
+                    <div class="news-model col-md-12">
+                        <div class="col-md-2">
+                            <a href="{% url 'noteApp:noteDetail' result.object.id %}">
+                                <img src="{{ result.object.pagephoto.url }}" style="width: 100%;height: 120px">
+                            </a>
+                        </div>
+                        <div class="col-md-10">
+                            <a href="{% url 'noteApp:noteDetail' result.object.id %}">
+                                <b>{{ result.object.title }}</b>
+                            </a>
+                            <span style="color:#777777;">{{ result.object.publishDate|date:"Y-m-d" }}</span>
+                            <p class="news-search-model">
+                                {% highlight result.object.description with query %}
+                            </p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <h4 align="center" style="color: #777777">抱歉！没有找到相关游记！</h4>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

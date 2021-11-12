@@ -1,0 +1,3 @@
+{{ object.pagephoto.url }}
+{{ object.title }}
+{{ object.description }}

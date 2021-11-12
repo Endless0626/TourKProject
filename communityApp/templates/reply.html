@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block title %}
+    回复
+{% endblock %}
+
+{% block content %}
+    <link href="{% static 'css/products.css' %}" rel="stylesheet">
+    <div class="container">
+        <a class="col-md-12" onclick="javascript:history.back(-1)"
+           style="color: #777777;font-size: 13px;padding-top: 10px;
+           margin-top: 10px;float: left"><< 返回</a>
+        <div class="col-md-12" style="padding-bottom: 30px">
+            <h3>
+                {{ replyList.title }}
+            </h3>
+            <p style="color:#777777; font-size: 15px;line-height: 30px">
+                {{ replyList.content }}
+            </p>
+            <p style="font-size: 10px;color: grey;float: right">
+                <i style="font-size: 12px;color: #F4A460;font-style: normal;font-weight: bolder">
+                    {{ replyList.name }}</i>
+                &nbsp;&nbsp;&nbsp;发布于{{ replyList.quizDate }}&nbsp;&nbsp;
+                <a onclick="return deleteJob();" href="#">
+                    删除
+                </a>
+            </p>
+        </div>
+        <div class="model-details-title">
+            我要回答
+        </div>
+        <div class="col-md-12">
+            <div class="panel-body">
+                <div class="row">
+                    <form action="." name="replyForm" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+                        {% csrf_token %}  <!--规避跨站请求，不加，后台无法接受数据-->
+                        <!-- 左侧 -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">昵称：</label>
+                                <div class="col-sm-10">
+                                    {{replyForm.replyname|add_class:"form-control"|attr:"placeholder=请填写昵称"}}<!--模板表单变量-->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">问题：</label>
+                                <div class="col-sm-10" readonly>
+                                    {{replyForm.title|add_class:"form-control"}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">回复：</label>
+                                <div class="col-md-10">
+                                    {{replyForm.replycontent|add_class:"form-control"}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <center><input type="submit" class="btn btn-primary" value="提交" /></center>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="model-details-title">
+            用户回复
+        </div>
+        {% for rep in replyList.replys.all %}
+            <div class="col-md-12" style="padding-top: 15px">
+{#            {{ replyList.id }}:{{ rep.id }}#}
+                <p style="color: #F4A460;font-size: 16px">
+                    <img src="{% static 'img/community/newsicon.gif' %}" style="width: 30px">
+                    {{ rep.replyname }}
+                </p>
+                <p style="line-height: 30px">
+                    {{ rep.replycontent }}
+                </p>
+                <p style="font-size: 10px;color: grey;float: right">
+                    发布于{{ rep.replyDate }}&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'messageApp:message' %}">
+                        ⚠(举报)
+                    </a>&nbsp;&nbsp;
+                    <a href="#">
+                        删除
+                    </a>
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+    <script type="text/javascript" language="JavaScript">
+		function deleteJob()
+		{
+		     if(confirm("确定要删除吗?"))
+		     {
+		         return true;
+		     }else{
+		         return false;
+			 }
+		}
+    </script>
+{% endblock %}

@@ -1,0 +1,9 @@
+.model-details .row-4{margin-top: 20px}
+.model-details .row-5{border: none}
+.paging{text-align: center;}
+.pagination .active a{background-color: #F4A460;border-color: #F4A460}
+.model-details-product-title{
+    padding: 15px 0px;font-size: 18px;border-bottom: 1px #F4A460 solid;
+    color: #F4A460;margin-top: 10px;margin-bottom: 10px;text-align: center;}
+.bottom-right{float: left;padding-left: 45%;align-content: center}
+.bottom-style{text-align: center;background-color: #9d9d9d;color: #ffffff;border: none;height: 35px;width: 110px;}

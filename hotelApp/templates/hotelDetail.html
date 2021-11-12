@@ -1,0 +1,303 @@
+{% extends "otherbase.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    酒店
+{% endblock %}
+
+{% block content %}
+    <link href="{% static 'css/products.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+        .changeColor{border-color: #a6a6a6;background-size: 1px;background-color: #a6a6a6;}
+    </style>
+    <div class="container">
+        <br>
+        <a href="{% url 'destinationApp:cityDetail' city.id %}" style="font-size: 12px;color: #3c3c3c">
+            << {{ hoteldetail.city }}
+        </a>
+        <div>
+            <h2 style="color: #101010">{{ hoteldetail.title }}</h2>
+            <p style="font-size: 13px;color: #777777; height: 10px">{{ hoteldetail.entitle }}</p>
+            <p style="font-size: 11px;color: #777777;">📍<b>地址：</b>{{ hoteldetail.address }}</p>
+        </div>
+        <hr>
+        <div class="col-md-12">
+            <ul class="nav navbar-nav" style="width: 90%;height: 40px;margin-top: 0">
+                <li class="nav-top">
+                    <a href="#rooms" style="font-size: 15px;color: #F4A460">历史房价</a>
+                </li>
+                <li class="nav-top">
+                    <a href="#about" style="font-size: 15px;color: #F4A460">酒店概况</a>
+                </li>
+                <li class="nav-top">
+                    <a href="#spots" style="font-size: 15px;color: #F4A460">附近景点</a>
+                </li>
+                <li class="nav-top">
+                    <a href="#comments" style="font-size: 15px;color: #F4A460">精选点评</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-12 model-details" style="margin-top: 20px;margin-bottom: 20px;align-content: center">
+            <div class="col-md-11">
+                <div id="ad" class="carousel slide" data-ride="carousel" data-interval="4000">
+                    <div class="carousel-inner">
+                        {% for img in imgList %}
+                            {% if forloop.first %}
+                                <div class="item active">
+                                    <img class="img-responsive" src="{{ img.photo.url }}" style="width: 100%;height: 550px" align="center">
+                                </div>
+                            {% else %}
+                                <div class="item" style="width: 100%;height: 550px">
+                                    <img class="img-responsive" src="{{ img.photo.url }}" style="width: 100%;height: 550px" align="center">
+                                    <div class="carousel-caption nav-title">{{ img.photoType }}·第 {{ forloop.counter0 }} 张照片</div>
+                                </div>
+                            {% endif %}
+                            {% empty %}
+                            <h4 align="center">暂时没有这类图片！</h4>
+                        {% endfor %}
+                    </div>
+                    <a class="left carousel-control" href="#ad" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="right carousel-control" href="#ad" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-1" style="padding: 70px 0" align="center">
+                <a href="{% url 'hotelApp:hotelDetail' hoteldetail.id '全部' %}">
+                    <h4 style="padding:20px 0;background-color: #F4A460;color: white">
+                        全部
+                    </h4>
+                </a>
+                {% for ty in TypeList %}
+                    <a href="{% url 'hotelApp:hotelDetail' hoteldetail.id ty.photoType %}">
+                        <h4 style="padding:20px 0;margin: 10px 0;background-color: #F4A460;color: white">
+                            {{ ty.photoType }}
+                        </h4>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="model-details">
+            <h3>
+                <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                <a name="rooms" style="color: #3c3c3c">
+                    历史房价
+                </a>
+            </h3>
+            <div class="col-md-12">
+                <table border="1" style="width: 80%;margin-bottom: 20px" align="center">
+                    <tr style="padding: 5px">
+                        <td><b style="padding: 10px">房型</b></td>
+                        <td><b style="padding: 10px">最多可住人数</b></td>
+                        <td><b style="padding: 10px">房价</b></td>
+                    </tr>
+                    {% for pr in priceList %}
+                        <tr align="center">
+                            <td>
+                                <p>{{ pr.roomType }}</p>
+                            </td>
+                            <td>
+                                <p style="padding: 5px">{{ pr.roomPeople }}人</p>
+                            </td>
+                            <td>
+                                <p style="color: #F4A460;font-size: 17px">
+                                    ¥{{ pr.roomPrice }}
+                                    <i style="color: #777777;font-style: normal;font-size: 11px">
+                                        (1晚，已含税)
+                                    </i>
+                                </p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="model-details">
+            <h3 style="margin-top: 30px">
+                <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                <a name="about" style="color: #3c3c3c">
+                    酒店概况
+                </a>
+            </h3>
+            <div class="col-md-12">
+                <div class="col-md-1" style="padding: 6px 0;">
+                    <b style="float: right">基本信息</b>
+                </div>
+                <div class="col-md-11" align="left">
+                    <div class="col-md-12" style="color: #777777">
+                        <div class="col-md-3" style="float: left">
+                            <p style="float: left"><b>入住时间：</b>{{ hoteldetail.checkin }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p style="float: left"><b>离店时间：</b>{{ hoteldetail.checkout }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p style="float: left"><b>建成年份：</b>{{ hoteldetail.year }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p style="float: left"><b>酒店规模：</b>{{ hoteldetail.scale }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <hr size="5px" width="100%" color="#DCDCDC" style="margin-top: 0;margin-bottom: 7px">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-1" style="padding: 6px 0;">
+                    <b style="float: right">主要设施</b>
+                </div>
+                <div class="col-md-11" align="left">
+                    {% for ma in hoteldetail.mfacility.all %}
+                        <div class="col-md-2">
+                            <p style="color: #777777;font-size: 12px">✔&nbsp;{{ ma.facilities }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-12">
+                    <hr size="5px" width="100%" color="#DCDCDC" style="margin-top: 0;margin-bottom: 7px">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-1" style="padding: 6px 0;">
+                    <b style="float: right">酒店服务</b>
+                </div>
+                <div class="col-md-11" align="left">
+                    {% for se in hoteldetail.service.all %}
+                        <div class="col-md-2">
+                            <p style="color: #777777;font-size: 12px">✔&nbsp;{{ se.facilities }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-12">
+                    <hr size="5px" width="100%" color="#DCDCDC" style="margin-top: 0;margin-bottom: 7px">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-1" style="padding: 6px 0;">
+                    <b style="float: right">酒店设施</b>
+                </div>
+                <div class="col-md-11" align="left">
+                    {% for hf in hoteldetail.hfacility.all %}
+                        <div class="col-md-2">
+                            <p style="color: #777777;font-size: 12px">✔&nbsp;{{ hf.facilities }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-12">
+                    <hr size="5px" width="100%" color="#DCDCDC" style="margin-top: 0;margin-bottom: 7px">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-1" style="padding: 6px 0;">
+                    <b style="float: right">房间设施</b>
+                </div>
+                <div class="col-md-11" align="left">
+                    {% for rf in hoteldetail.rfacility.all %}
+                        <div class="col-md-2">
+                            <p style="color: #777777;font-size: 12px">✔&nbsp;{{ rf.facilities }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-12">
+                    <hr size="5px" width="100%" color="#DCDCDC" style="margin-top: 0;margin-bottom: 7px">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-1" style="padding: 6px 0;">
+                    <b style="float: right">酒店攻略</b>
+                </div>
+                <div class="col-md-11">
+                    <p style="color: #777777;font-size: 11px">{{ hoteldetail.method }}</p>
+                </div>
+                <div class="col-md-12">
+                    <hr size="5px" width="100%" color="#DCDCDC" style="margin-top: 0;margin-bottom: 7px">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-1" style="padding: 6px 0;">
+                    <b style="float: right">出行提示</b>
+                </div>
+                <div class="col-md-11">
+                    <p style="color: #777777;font-size: 11px">{{ hoteldetail.tip }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="model-details">
+            <h3 style="padding-top: 10px">
+                <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                <a name="spots" style="color: #3c3c3c;">
+                    附近特色
+                </a>
+                <span style="float: right;font-size: 12px">
+                    <a href="{% url 'destinationApp:cityDetail' city.id %}"> >>更多 </a>
+                </span>
+            </h3>
+            <div class="col-md-12">
+                <div class="col-md-4" align="center">
+                    {% for img in n1.specialImgs.all %}
+                        {% if forloop.first %}
+                            <a href="{% url 'destinationApp:specialDetail' n1.id %}">
+                                <img style="width: 80%" src="{{ img.photo.url }}">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                    <a href="{% url 'destinationApp:specialDetail' n1.id %}">
+                        <h4 style="color: black">{{ hoteldetail.near1 }}</h4>
+                    </a>
+                </div>
+                <div class="col-md-4" align="center">
+                    {% for img in n2.specialImgs.all %}
+                        {% if forloop.first %}
+                            <a href="{% url 'destinationApp:specialDetail' n2.id %}">
+                                <img style="width: 80%" src="{{ img.photo.url }}">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                    <a href="{% url 'destinationApp:specialDetail' n2.id %}">
+                        <h4 style="color: black">{{ hoteldetail.near2 }}</h4>
+                    </a>
+                </div>
+                <div class="col-md-4" align="center">
+                    {% for img in n3.specialImgs.all %}
+                        {% if forloop.first %}
+                            <a href="{% url 'destinationApp:specialDetail' n3.id %}">
+                                <img style="width: 80%" src="{{ img.photo.url }}">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                    <a href="{% url 'destinationApp:specialDetail' n3.id %}">
+                        <h4 style="color: black">{{ hoteldetail.near3 }}</h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="model-details">
+            <h3>
+                <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                <a name="comments" style="color: #3c3c3c">
+                    精选点评
+                </a>
+            </h3>
+            {% for co in hoteldetail.userComment.all %}
+                <p style="color: #F4A460;font-size: 15px">👤{{ co.name }}
+                    <span style="float: right;color: #777777;font-size: 13px">
+                        评价指数：<i style="color: #F4A460;font-size: 22px">{{ co.index }}</i>&nbsp;颗星
+                    </span>
+                </p>
+                <div class="col-md-12">
+                    <p>{{ co.content }}</p>
+                    <p style="font-size: 10px;color: #777777">{{ co.commentDate }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function f1(self) {
+            $(self).addClass('changeColor').siblings().removeClass('changeColor');
+        }
+    </script>
+{% endblock %}

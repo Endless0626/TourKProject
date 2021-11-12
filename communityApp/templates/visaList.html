@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}签证{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-3">
+                <div class="model-title">
+                    社区
+                </div>
+                <div class="model-list">
+                    <ul class="list-group">
+                        <li class="list-group-item" id="strategys">
+                            <a href="{% url 'communityApp:strategy' %}">攻略下载</a>
+                        </li>
+                        <li class="list-group-item" id="quizs">
+                            <a href="{% url 'communityApp:quiz' %}">问答</a>
+                        </li>
+                        <li class="list-group-item" id="visas">
+                            <a href="{% url 'communityApp:visa' %}">签证</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        <div class="model-details-title col-md-9">
+            签证
+        </div>
+        <div class="row">
+            {% for vi in visaList %}
+                <div class="col-sm-6 col-md-4" style="float: left">
+                    <div class="thumbnail" style="height: 330px;">
+                        <a href="{% url 'communityApp:visaData' vi.id %}">
+                            <img src="{{vi.slogan.url}}" style="height: 240px">
+                        </a>
+                        <div class="caption">
+                            <p style="margin-bottom: 0">
+                                {{vi.title|truncatechars:"40"}}
+                                <h3 style="color: #F4A460;margin: 0;padding-top: 0;float: right">¥{{ vi.price }}<i style="font-size: 13px;font-style: normal;color: black">起</i></h3>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

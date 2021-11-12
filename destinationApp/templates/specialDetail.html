@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ special.place }}{{ special.specialType }}|{{ special.title }}
+{% endblock %}
+
+{% block content %}
+    <link href="{% static 'css/products.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <div class="container">
+        <br>
+        <a href="{% url 'destinationApp:cityDetail' city.id %}" style="font-size: 12px;color: #3c3c3c"><< {{ special.place }}</a>
+        <div>
+            <h1 style="color: #101010">{{ special.title }}</h1>
+            <p style="font-size: 13px;color: #777777; height: 10px">{{ special.kname }}</p>
+        </div>
+        <hr>
+        <div class="col-md-12">
+            <ul class="nav navbar-nav" style="width: 90%;height: 40px;margin-top: 0">
+                <li class="nav-top">
+                    <a href="#about" style="font-size: 15px;color: #F4A460">{{ special.specialType }}概况</a>
+                </li>
+                <li class="nav-top">
+                    <a href="#hotels" style="font-size: 15px;color: #F4A460">附近酒店</a>
+                </li>
+                <li class="nav-top">
+                    <a href="#comments" style="font-size: 15px;color: #F4A460">精选点评</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-12 model-details" style="margin-top: 20px;margin-bottom: 20px;align-content: center">
+            <div id="ad" class="carousel slide" data-ride="carousel" data-interval="4000">
+                <div class="carousel-inner">
+                    {% for img in special.specialImgs.all %}
+                        {% if forloop.first %}
+                            <div class="item active">
+                                <img class="img-responsive" src="{{ img.photo.url }}">
+                            </div>
+                        {% else %}
+                            <div class="item">
+                                <img class="img-responsive" src="{{ img.photo.url }}">
+                                <div class="carousel-caption nav-title">第 {{ forloop.counter0 }} 张照片</div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <a class="left carousel-control" href="#ad" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#ad" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+        </div>
+        <div class="model-details">
+            <h3 style="margin-top: 30px">
+                <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                <a name="about" style="color: #3c3c3c">
+                    {{ special.specialType }}概况
+                </a>
+            </h3>
+            <h4 style="margin-left: 20px">简介</h4>
+            <p style="color: gray;margin: 20px 0">{{ special.description }}</p>
+            <h4 style="margin-left: 20px">交通路线</h4>
+            <p style="color: gray;margin: 20px">{{ special.traffic }}</p>
+            <h4 style="margin-left: 20px">门票</h4>
+            <p style="color: gray;margin: 20px">{{ special.tickets }}</p>
+            <h4 style="margin-left: 20px">开放时间</h4>
+            <p style="color: gray;margin: 20px">{{ special.open }}</p>
+        </div>
+        <div class="model-details">
+            <h3 style="padding-top: 10px">
+                <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                <a name="hotels" style="color: #3c3c3c;">
+                    附近酒店
+                </a>
+                <span style="float: right;font-size: 12px">
+                    <a href="{% url 'hotelApp:hotels' %}"> >>更多 </a>
+                </span>
+            </h3>
+            <div class="col-md-12">
+                {% for ho in hotel %}
+                    <div class="col-md-4" align="center">
+                        {% for img in ho.hotelImgs.all %}
+                            {% if forloop.first %}
+                                <a href="{% url 'hotelApp:hotelDetail' ho.id '全部' %}">
+                                    <img style="width: 80%;height: 170px" src="{{ img.photo.url }}">
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                        <a href="{% url 'hotelApp:hotelDetail' ho.id '全部' %}">
+                            <h4 style="color: black">{{ ho.title }}</h4>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="model-details">
+            <h3>
+                <img src="{% static 'img/destination/orang.png' %}" style="width: 10px">
+                <a name="comments" style="color: #3c3c3c">
+                    精选点评
+                </a>
+            </h3>
+{#            <p style="font-size: 18px;">点评1</p>#}
+            <p>{{ special.comment1 }}</p>
+            <p style="font-size: 10px;color: #777777">{{ special.Date1 }}</p>
+            <br>
+{#            <p style="margin-left: 20px">点评2</p>#}
+            <p>{{ special.comment2 }}</p>
+            <p style="font-size: 10px;color: #777777">{{ special.Date2 }}</p>
+            <br>
+{#            <p style="margin-left: 20px">点评3</p>#}
+            <p>{{ special.comment3 }}</p>
+            <p style="font-size: 10px;color: #777777">{{ special.Date3 }}</p>
+        </div>
+    </div>
+{% endblock %}

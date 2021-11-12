@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+欢迎留言
+{% endblock %}
+
+{% block content %}
+<!-- 主体内容 -->
+<div class="container">
+    <div class="row">
+        <div class="alert alert-success">
+            <strong>您已留言成功!</strong>
+            请<a href="{% url 'communityApp:quiz' %}">返回</a>上一界面，谢谢！
+        </div>
+    </div>
+</div>
+{% endblock %}

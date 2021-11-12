@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}机票|机票搜索{% endblock %}
+
+{% block content %}
+    <link href="{% static 'css/news.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="{% static 'js/codemirror.js' %}"></script>
+    <script src="{% static 'js/python.js' %}"></script>
+    <style type="text/css">
+        .CodeMirror {
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+    </style>
+
+    <div class="container">
+        <div class="col-md-10" align="center" style="background-color: #EEE9E9;margin: 30px 0">
+            <div style="padding-top: 20px">
+                <b style="color: #777777;font-size: larger">请输入关键词进行搜索</b>
+            </div>
+            <div class="hidden-xs model-details-title-search" align="center" style="width: auto;float: none">
+                <form method="get" id="searchform" action="{% url 'ticketApp:search' %}">
+                    {% csrf_token %}
+                    <div class="input-group col-md-12" style="width: 80%;padding: 50px">
+                        <div class="col-md-9">
+                            <input type="text" name="offkey" class="form-control" style="margin-bottom: 5px"
+                                   placeholder="出发城市：例如 深圳/青岛/北京" required />
+                            <input type="text" name="landkey" class="form-control" style="margin-top: 5px"
+                                   placeholder="到达城市：例如 首尔/釜山/济州岛" required />
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group-btn">
+                                <input type="submit" class="btn btn-default"
+                                       style="width: 100%;height: 75px" value="🔍查询" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-2" style="float: right" align="right">
+            <div class="col-md-12">
+                <a href="{% url 'ticketApp:ticketSelf' %}">
+                    <input type="button" value="自助值机" align="center"
+                           style="font-size: 20px;background-color: #f7e1b5;color: #F4A460;border: none;
+                           width: 150px;height: 130px;margin-top: 30px">
+                </a>
+            </div>
+            <div class="col-md-12">
+                <a href="http://www.weather.com.cn/forecast/world.shtml">
+                    <input type="button" value="天气预报" align="center"
+                       style="font-size: 20px;background-color: #f7e1b5;color: #F4A460;border: none;
+                       width: 150px;height: 130px;margin-top: 15px">
+                </a>
+            </div>
+        </div>
+        <div class="model-details-title col-md-10" style="padding-top: 0;margin-top: 0">
+            {{ ticketName }}<a style="font-size: 12px;float: right" href="{% url 'ticketApp:ticketOff' '全部' '全部' '全部' %}">更多其他机票>></a>
+        </div>
+        {% for tic in ticketsList %}
+        <div class="row col-md-10">
+            <div class="thumbnail" style="height: 100px;width: 103%">
+                <div class="col-md-3">
+                    <div class="col-md-4">
+                            <img align="center" src="{{ tic.logo.url }}" style="width: 40px;padding-top: 20px">
+                    </div>
+                    <div class="col-md-8">
+                        <p style="font-size: 10px;margin-top: 20px;float: left">{{ tic.airportType }}</p>
+                        <p style="font-size: 10px;float: left;color: #777777">{{ tic.sizeType }} {{ tic.number }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-4">
+                        <p align="left" style="font-size: 10px;margin-bottom: 0;color: #777777">{{ tic.landTime|date:"m-d" }}</p>
+                        <h2 align="center" style="margin-top: 0">{{ tic.offTime|date:"H:i" }}</h2>
+                        <p align="center" style="font-size: 12px">{{ tic.offAirport }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p align="center" style="color: #3c3c3c;margin-top: 20px;height: 0;font-size: 12px">{{ tic.flyTime }}</p>
+                        <hr align="center" style="width: 90px;margin-top: 25px;margin-bottom: 0;size: 5px;color: #777777;">
+                        {% if tic.middlePlace %}
+                            <p align="center" style="color: #777778;font-size: 12px;margin-top: 2px;margin-bottom: 0">中转</p>
+                            <p align="center" style="color: #777778;font-size: 12px;margin-top: 0;">{{ tic.middlePlace }}({{ tic.middleTime }})</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <p align="left" style="font-size: 10px;margin-bottom: 0;color: #777777">{{ tic.landTime|date:"m-d" }}</p>
+                        <h2 align="center" style="margin-top: 0">{{ tic.landTime|date:"H:i" }}</h2>
+                        <p align="center" style="font-size: 12px">{{ tic.landAirport }}</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="col-md-6">
+                        <h3 align="center" style="float: right;color: #F4A460;margin-top: 30px;height: 15px">¥{{ tic.price }}</h3>
+                        <p style="font-size: 12px;color: #777777;float: right;margin-bottom: 20px">{{ tic.siteType }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#{{ tic.number }}"
+                                style="background-color: #F4A460;color: white;float: left;
+                               height: 40px;width: 95px;border: none;margin-top: 25px;font-size: 15px">
+                            查看详情
+                        </button>
+                        <div class="modal fade" id="{{ tic.number }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            &times;
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">
+                                            <b style="font-size: 15px">航班</b><i style="color: #F4A460;font-style: normal">{{ tic.number }}</i><b style="font-size: 15px">详情</b>
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body col-md-12">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-5" style="padding-top: 20px">
+                                            <p><b>飞行时间：</b>{{ tic.flyTime }}</p>
+                                            <p><b>座位等级：</b>{{ tic.siteType }}</p>
+                                            <p><b>退改签：</b>{{ tic.changeType }}</p>
+                                            <p><b>餐食提供：</b>{{ tic.foodType }}</p>
+                                            <p><b>餐食提供：</b>{{ tic.luggageWeight }}</p>
+                                            <p><b>价格：</b><span style="color: #F4A460;font-size: 20px">¥{{ tic.price }}</span></p>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <img src="{{ tic.logo.url }}" style="width: 100%;padding: 20px">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="col-md-10">
+                <h4 style="color: #777777;" align="center">暂时没有这类航班信息哦~</h4>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

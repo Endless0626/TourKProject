@@ -1,0 +1,15 @@
+.paging{text-align: center}
+.pagination .active a{background-color: #F4A460;border-color: #F4A460}
+.news-model{margin-top: 15px}
+.news-model span{float: right}
+.news-model a{color: #666;font-size: 16px}
+.news-model a:hover, .news-model a:focus{text-decoration: none;color: #d30a1c}
+.news-model p{margin-top: 5px;font-size: 13px}
+.model-details-product-title{
+    padding: 15px 0px;font-size: 18px;border-bottom: 1px #F4A460 solid;
+    color: #F4A460;margin-top: 10px;margin-bottom: 10px;text-align: center;}
+.model-foot{padding: 5px 0px;font-size: 14px;color: #545353;margin-top: 10px;text-align: center;}
+.model-details-title-search{font-size: 18px;width: 300px;float: right;margin-bottom: 20px}
+.news-search-model span{float: none}
+.news-model a span{float: none}
+.highlighted{color: red}

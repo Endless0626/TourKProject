@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+行程路线
+{% endblock %}
+
+{% block content %}
+    <link href="{% static 'css/news.css' %}" rel="stylesheet">
+    <!--广告横幅-->
+    <div id="ad" class="carousel slide" data-ride="carousel" data-interval="3000">
+        <div class="carousel-inner">
+            {% for img in noteList %}
+                {% if forloop.first %}
+                    <div class="item active">
+                        <div style="position: absolute;margin-top: 200px;padding-left: 80px;color: white;font-family: 方正清刻本悦宋简体">
+                            <h1 align="center">“{{ img.title }}”</h1>
+                        </div>
+                        <a href="{% url 'noteApp:noteDetail' img.id %}">
+                            <img src="{{ img.titlephoto.url }}" style="width: 100%;">
+                        </a>
+
+                    </div>
+                {% else %}
+                    <div class="item">
+                        <div style="position: absolute;margin-top: 200px;padding-left: 80px;color: white;font-family: 方正清刻本悦宋简体">
+                            <h1 align="center">“{{ img.title }}”</h1>
+                        </div>
+                        <a href="{% url 'noteApp:noteDetail' img.id %}">
+                            <img src="{{ img.titlephoto.url }}" style="width: 100%;">
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <a class="left carousel-control" href="#ad" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="right carousel-control" href="#ad" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </div>
+    <!--主体内容-->
+    <div class="container">
+        <div class="row row-3" style="margin-top: 0">
+            <!--说明文字与图片-->
+            <div class="col-md-9">
+                <div class="model-details-title">
+                    行程路线
+                    <div class="col-md-12 hidden-xs model-details-title-search" style="width: 300px">
+                        <form method="get" id="searchform" action="{% url 'haystack_search' %}">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control" placeholder="请输入关键词" required />
+                                <span class="input-group-btn">
+                                    <input type="submit" class="btn btn-default" value="查询" />
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--此处填入产品列表内容-->
+                <div class="model-details">
+                    {% for nl in noteList %}
+                        <div class="news-model col-md-12">
+                            <div class="col-md-3">
+                                <a href="{% url 'noteApp:noteDetail' nl.id %}">
+                                    <img src="{{ nl.pagephoto.url }}" style="width: 100%;height: 120px">
+                                </a>
+                            </div>
+                            <div class="col-md-9">
+                                <a href="{% url 'noteApp:noteDetail' nl.id %}" style="color: #F4A460"><b>{{ nl.title }}</b></a>
+                                <span style="color: #777777;font-size: smaller">{{ nl.views }}人浏览过</span>
+                                <p style="font-size: 12px;color: #777777;margin-bottom: 0">
+                                    作者：{{ nl.author }}&nbsp;&nbsp;日期：{{ nl.publishDate|date:"Y-m-d" }}
+                                </p>
+                                <p>
+                                    {{ nl.mytxt|truncatechars:"90" }}...
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% if pageDate %}
+                    <div class="paging">
+                        <ul id="pages" class="pagination">
+                            {% if pageDate.first %}
+                                <li><a href="?page=1"></a></li>
+                            {% endif %}
+                            {% if pageDate.left %}
+                                {% if pageDate.left_has_more %}
+                                    <li><span>...</span></li>
+                                {% endif %}
+                                {% for i in pageDate.left %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                            <li class="active"><a href="?page={{ pageDate.page }}">{{ pageDate.page }}</a></li>
+                            {% if pageDate.right %}
+                                {% for i in pageDate.right %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endfor %}
+                                {% if pageDate.right_has_more %}
+                                    <li><span>...</span></li>
+                                {% endif %}
+                            {% endif %}
+                            {% if pageDate.last %}
+                                <li><a href="?page={{ pageDate.total_pages }}">{{ pageDate.total_pages }}</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="col-md-12">
+                    <a href="{% url 'noteApp:upload' %}">
+                        <input type="button" value="上传路线" align="center"
+                               style="font-size: 20px;background-color: #f7e1b5;color: #EE7621;
+                               width: 90%;height: 130px;margin-top: 30px;border-color: orange;
+                               border-width: 5px">
+                    </a>
+                </div>
+                <div class="col-md-12">
+                    <h4 style="margin-top: 30px">景点推荐
+                        <a href="{% url 'destinationApp:special' 'spots' %}">
+                            <span style="float: right;font-size: 12px">更多+</span>
+                        </a>
+                    </h4>
+                </div>
+                {% for sp in spotsList %}
+                    <div class="col-md-12">
+                        {% for img in sp.specialImgs.all %}
+                            {% if forloop.first %}
+                                <a href="{% url 'destinationApp:specialDetail' sp.id %}">
+                                    <img src="{{ img.photo.url }}" style="width: 90%;margin-bottom: 20px">
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="carousel-caption nav-title" style="padding-bottom: 5px">
+                            <h4 style="padding-bottom: 0;">
+                                <i style="font-size: 13px;font-style: normal">{{ sp.place }}</i>
+                                ·{{ sp.title }}
+                            </h4>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-md-12">
+                        <h5 align="center">暂无相关信息哦~</h5>
+                    </div>
+                {% endfor %}
+                <div class="col-md-12">
+                    <h4 style="margin-top: 30px">美食推荐
+                        <a href="{% url 'destinationApp:special' 'food' %}">
+                            <span style="float: right;font-size: 12px">更多+</span>
+                        </a>
+                    </h4>
+                </div>
+                {% for fo in foodList %}
+                    <div class="col-md-12">
+                        {% for img in fo.specialImgs.all %}
+                            {% if forloop.first %}
+                                <a href="{% url 'destinationApp:specialDetail' fo.id %}">
+                                    <img src="{{ img.photo.url }}" style="width: 90%;margin-bottom: 20px">
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="carousel-caption nav-title" style="padding-bottom: 5px">
+                            <h4 style="padding-bottom: 0;">
+                                <i style="font-size: 13px;font-style: normal">{{ fo.place }}</i>
+                                ·{{ fo.title }}
+                            </h4>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-md-12">
+                        <h5 align="center">暂无相关信息哦~</h5>
+                    </div>
+                {% endfor %}
+                <div class="col-md-12">
+                    <h4 style="margin-top: 30px">娱乐推荐
+                        <a href="{% url 'destinationApp:special' 'entertain' %}">
+                            <span style="float: right;font-size: 12px">更多+</span>
+                        </a>
+                    </h4>
+                </div>
+                {% for en in entertainList %}
+                    <div class="col-md-12">
+                        {% for img in en.specialImgs.all %}
+                            {% if forloop.first %}
+                                <a href="{% url 'destinationApp:specialDetail' en.id %}">
+                                    <img src="{{ img.photo.url }}" style="width: 90%;margin-bottom: 20px">
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="carousel-caption nav-title" style="padding-bottom: 5px">
+                            <h4 style="padding-bottom: 0;">
+                                <i style="font-size: 13px;font-style: normal">{{ en.place }}</i>
+                                ·{{ en.title }}
+                            </h4>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-md-12">
+                        <h5 align="center">暂无相关信息哦~</h5>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

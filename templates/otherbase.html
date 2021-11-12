@@ -1,0 +1,189 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>悠哉韩国|{% block title %}{% endblock %}</title>
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default" role="navigation" style="margin-top: 0">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example" aria-expanded="false">
+                    <span>导航栏</span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example">
+                <ul class="nav navbar-nav" style="width:100%;align-content: center">
+                    <li class="nav-top">
+                        <a href="{% url 'home' %}">首页</a>
+                    </li>
+                    <li class="dropdown nav-top" id="destination">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">目的地</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'destinationApp:city' %}">热门城市&nbsp;<i class="i-new" style="color: darkred">new</i></a></li>
+                            <li id="special"><a href="{% url 'destinationApp:special' 'spots' %}">景点</a></li>
+                            <li id="special"><a href="{% url 'destinationApp:special' 'entertain' %}">娱乐</a></li>
+                            <li id="special"><a href="{% url 'destinationApp:special' 'food' %}">美食</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-top" id="ticket">
+                        <a href="{% url 'ticketApp:ticket' %}">机票</a>
+                    </li>
+                    <li class="nav-top" id="hotel">
+                        <a href="{% url 'hotelApp:hotels' %}">酒店</a>
+                    </li>
+                    <li class="dropdown nav-top" id="note">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">游记</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'noteApp:routes' %}">行程路线</a></li>
+                            <li><a href="{% url 'noteApp:upload' %}">上传游记</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown nav-top" id="community">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">社区</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'communityApp:strategy' %}">攻略下载</a></li>
+                            <li><a href="{% url 'communityApp:quiz' %}">问答</a></li>
+                            <li><a href="{% url 'communityApp:visa' %}">签证</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="line"></div>
+    {% block content %}
+    {% endblock %}
+    <div class="container web-footer">
+        <div class="row" id="map-footer">
+            <div class="col-md-2">
+                <dl>
+                    <dt>目的地</dt>
+                    <dd><a href="{% url 'destinationApp:city' %}">热门城市</a></dd>
+                    <dd><a href="{% url 'destinationApp:special' 'spots' %}">景点</a></dd>
+                    <dd><a href="{% url 'destinationApp:special' 'entertain' %}">娱乐</a></dd>
+                    <dd><a href="{% url 'destinationApp:special' 'food' %}">美食</a></dd>
+                </dl>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt>旅游必备</dt>
+                    <dd><a href="{% url 'ticketApp:ticket' %}">机票查询</a></dd>
+                    <dd><a href="{% url 'hotelApp:hotels' %}">了解酒店</a></dd>
+                    <dd><a href="{% url 'noteApp:routes' %}">行程路线</a></dd>
+                </dl>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt>社区</dt>
+                    <dd><a href="{% url 'communityApp:strategy' %}">攻略下载</a></dd>
+                    <dd><a href="{% url 'communityApp:quiz' %}">问答Q&A</a></dd>
+                    <dd><a href="{% url 'communityApp:visa' %}">签证</a></dd>
+                </dl>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt>关于我们</dt>
+                    <dd><a href="{% url 'messageApp:about' %}">了解我们</a></dd>
+                    <dd><a href="{% url 'messageApp:message' %}">留言板</a></dd>
+                </dl>
+            </div>
+            <div class="col-md-4" id="wx">
+                <p>扫描二维码，关注我们</p>
+                <img class="qrimg" src="{% static 'img/home/qr.png' %}" alt="wx">
+                <p>客服热线：<b style="font-size: 20px">011 0526 0520</b></p>
+            </div>
+        </div>
+        <div class="row" id="patent-footer">
+            <p>@ 2021 HUANG YUE 企业门户 版权所有 | 粤 ICP 备 180021101509</p>
+        </div>
+        <button type="button" id="BackTop" class="toTop-arrow" style="z-index: 100;"></button>
+    </div>
+    <script>
+        $(function () {
+            $(".dropdown").mouseover(function () {
+                $(this).addClass("open");
+            });
+            $(".dropdown").mouseleave(function () {
+                $(this).removeClass("open");
+            });
+        });
+    </script>
+    <script type="text/JavaScript">
+        $('#{{active_menu}}').addClass("active");
+    </script>
+    <script type="text/JavaScript">
+        $('#{{sub_menu}}').addClass("active");
+    </script>
+    <script type="text/JavaScript">
+        $('#{{ticket_menu}}').addClass("active");
+    </script>
+    <script>
+        // 向上滚动的函数
+        $(function () {
+            $('#BackTop').click(function () {
+                $('html,body').animate({scrollTop: 0}, 500);
+            });
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 300) {
+                    $('#BackTop').fadeIn(300);
+                } else {
+                    $('#BackTop').stop().fadeOut(300);
+                }
+            }).scroll();
+        });
+    </script>
+    <style>
+        /* 按钮边框的大小、位置、样式 */
+        .toTop-arrow {
+            width: 3.5rem;
+            height: 3.5rem;
+            padding: 0;
+            margin: 0;
+            border: 0;
+            border-radius: 33%;
+            opacity: 0.7;
+            background: black;
+            cursor: pointer;
+            position: fixed;
+            right: 1.5rem;
+            bottom: 2rem;
+            display: none;
+        }
+
+        /* 绘制按钮中的向上箭头 */
+        .toTop-arrow::before, .toTop-arrow::after {
+            width: 22px;
+            height: 7px;
+            border-radius: 15px;
+            background: orange;
+            position: absolute;
+            content: "";
+        }
+
+        .toTop-arrow::before {
+            transform: rotate(-50deg) translate(0, -50%);
+            left: 0.4rem;
+        }
+
+        .toTop-arrow::after {
+            transform: rotate(50deg) translate(0, -50%);
+            right: 0.4rem;
+        }
+
+        /* 取消点击按钮时的聚焦 */
+        .toTop-arrow:focus {
+            outline: none;
+        }
+    </style>
+</body>
+</html>

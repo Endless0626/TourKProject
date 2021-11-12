@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+{{specialName}}
+{% endblock %}
+{% block content %}
+    <link href="{% static 'css/products.css' %}" rel="stylesheet">
+<!--广告横幅-->
+    <div class="container-fluid">
+        <div class="row">
+            <img class="img-responsive model-img" style="width: 100%;" src="{% static 'img/destination/special/spots1.jpg' %}">
+        </div>
+    </div>
+    <!--主体内容-->
+    <div class="container">
+        <div class="row row-3">
+            <!--侧边导航栏-->
+            <div class="col-md-3">
+                <div class="model-title">
+                    <a href="{% url 'destinationApp:city' %}" style="color: white">目的地</a>
+                </div>
+                <div class="model-list">
+                    <ul class="list-group">
+                        <li class="list-group-item" id="spots">
+                            <a href="{% url 'destinationApp:special' 'spots' %}">景点</a>
+                        </li>
+                        <li class="list-group-item" id="entertain">
+                            <a href="{% url 'destinationApp:special' 'entertain' %}">娱乐</a>
+                        </li>
+                        <li class="list-group-item" id="food">
+                            <a href="{% url 'destinationApp:special' 'food' %}">美食</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--说明文字与图片-->
+            <div class="col-md-9">
+                <div class="model-details-title">
+                    {{specialName}}
+                </div>
+                  <!--此处填入产品列表内容-->
+                <div class="model-details">
+                    {% for special in specialList %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% for img in special.specialImgs.all %}
+                            {% if forloop.first %}
+                            <a class="thumbnail row-4" href="{% url 'destinationApp:specialDetail' special.id %}">
+                                <img class="img-responsive" src="{{ img.photo.url }}">
+                            </a>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <h3>{{ special.title|truncatechars:"20" }}<p style="font-size: 30px;color: #F4A460;float: right">{{ special.score }}</p></h3>
+                            <p style="font-size: 13px;color: grey">{{ special.kname }}</p>
+                            <p>
+                                {{ special.description|truncatechars:"130"}}...
+                            </p>
+                            <div class="thumbnail row-5">
+                                <div class="caption">
+                                    <p style="font-size: 15px;color: #a6a6a6;float: right">有{{ special.views }}人浏览过</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if pageDate %}
+                    <div class="paging">
+                        <ul id="pages" class="pagination pagination-sm pagination-xs">
+                            {% if pageDate.first %}
+                                <li><a href="?page=1"></a></li>
+                            {% endif %}
+                            {% if pageDate.left %}
+                                {% if pageDate.left_has_more %}
+                                    <li><span>...</span></li>
+                                {% endif %}
+                                {% for i in pageDate.left %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                            <li class="active"><a href="?page={{ pageDate.page }}">{{ pageDate.page }}</a></li>
+                            {% if pageDate.right %}
+                                {% for i in pageDate.right %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endfor %}
+                                {% if pageDate.right_has_more %}
+                                    <li><span>...</span></li>
+                                {% endif %}
+                            {% endif %}
+                            {% if pageDate.last %}
+                                <li><a href="?page={{ pageDate.total_pages }}">{{ pageDate.total_pages }}</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
